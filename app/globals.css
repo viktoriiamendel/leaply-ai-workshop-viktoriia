@@ -7,6 +7,8 @@
 @theme inline {
   --font-heading: var(--font-sans);
   --font-sans: var(--font-sans);
+  --font-display: var(--font-display);
+  --font-retro-mono: var(--font-retro-mono);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -126,4 +128,424 @@
   html {
     @apply font-sans;
   }
+}
+
+/* ============================================================
+   Tigers — retro arcade theme animations & overlays
+   ============================================================ */
+
+/* Animated dots used in the loading state (under each tiger card). */
+@keyframes tigerDot {
+  0%,
+  80%,
+  100% {
+    opacity: 0.2;
+    transform: translateY(0);
+  }
+  40% {
+    opacity: 1;
+    transform: translateY(-2px);
+  }
+}
+
+/* Idle "breathing" — barely-there scale loop on tiger cards. */
+@keyframes tigerBreathe {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+}
+
+/* ----------------------------------------------------------------
+   Tiger CHARACTER animations — bob, head-tilt, blink, accessories,
+   verdict reactions. These animate elements *inside* a panel, not
+   the panel itself.
+   ---------------------------------------------------------------- */
+
+/* Gentle vertical bob — like a character idling. */
+@keyframes tigerCharBob {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-2deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(2deg);
+  }
+}
+
+/* Faster, more agitated bob — used in loading state. */
+@keyframes tigerCharPace {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-4deg) scale(1);
+  }
+  25% {
+    transform: translateY(-4px) rotate(4deg) scale(1.04);
+  }
+  50% {
+    transform: translateY(-2px) rotate(-2deg) scale(1.02);
+  }
+  75% {
+    transform: translateY(-6px) rotate(3deg) scale(1.03);
+  }
+}
+
+/* Blink — a rectangle quickly covers the eyes area, simulating a
+   blink. Element should be absolutely positioned over the eyes. */
+@keyframes tigerCharBlink {
+  0%,
+  92%,
+  100% {
+    transform: scaleY(0);
+  }
+  94%,
+  98% {
+    transform: scaleY(1);
+  }
+}
+
+/* Accessory orbit — for objects that circle the tiger (coin, gear). */
+@keyframes accessoryOrbit {
+  0% {
+    transform: rotate(0deg) translate(56px) rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg) translate(56px) rotate(-360deg);
+  }
+}
+
+/* Coin spin in place (3D-ish). */
+@keyframes coinSpin {
+  0%,
+  100% {
+    transform: rotateY(0deg);
+  }
+  50% {
+    transform: rotateY(180deg);
+  }
+}
+
+/* Gear rotation. */
+@keyframes gearSpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Question mark float — small bob with a subtle wobble. */
+@keyframes questionFloat {
+  0%,
+  100% {
+    transform: translateY(0) rotate(-6deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(6deg);
+  }
+}
+
+/* Verdict reveal: rubber-band bounce in. */
+@keyframes verdictBounceIn {
+  0% {
+    transform: scale(0.3) rotate(-12deg);
+    opacity: 0;
+  }
+  55% {
+    transform: scale(1.3) rotate(6deg);
+    opacity: 1;
+  }
+  75% {
+    transform: scale(0.92) rotate(-3deg);
+  }
+  100% {
+    transform: scale(1) rotate(0);
+    opacity: 1;
+  }
+}
+
+/* Verdict OUT — quick horizontal shake (no rotation). */
+@keyframes verdictShake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-10px);
+  }
+  40% {
+    transform: translateX(10px);
+  }
+  60% {
+    transform: translateX(-8px);
+  }
+  80% {
+    transform: translateX(6px);
+  }
+}
+
+/* IN cheering: scale-up + small jump. */
+@keyframes verdictCheer {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  30% {
+    transform: translateY(-14px) scale(1.08);
+  }
+  60% {
+    transform: translateY(-6px) scale(1.04);
+  }
+}
+
+/* Particle spark: pops out from origin then fades. */
+@keyframes sparkPop {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.4);
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--spark-x, 0), var(--spark-y, 0)) scale(1.2);
+  }
+}
+
+/* Status halo — radial backdrop behind the tiger that scales up and
+   stays. Color provided via --halo-color CSS var. */
+@keyframes haloAppear {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* SVG eyelid pair for illustrated tigers (e.g. <MoneyTiger/>). The
+   eyelid `<g>` lives ON TOP of the eyes inside the SVG; we scale it
+   vertically from 0 (hidden) to 1 (covering the eyes), simulating a
+   blink. Requires `transform-box: fill-box` so transform-origin: center
+   resolves to the group's own bounding box, not the SVG root. */
+.tiger-blink {
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scaleY(0);
+  animation: tigerSvgBlink 5.4s ease-in-out infinite;
+}
+
+@keyframes tigerSvgBlink {
+  0%,
+  96%,
+  100% {
+    transform: scaleY(0);
+  }
+  98% {
+    transform: scaleY(1);
+  }
+}
+
+/* Accessory animation utility classes used by <TigerCharacter/>. */
+.tiger-accessory-orbit {
+  /* Coin orbiting the tiger head — wide circle, then spin on its own
+     axis (handled by Y-rotate inside the same anim composition). */
+  animation:
+    accessoryOrbit 4.2s linear infinite,
+    coinSpin 1.2s linear infinite;
+}
+
+.tiger-accessory-float {
+  /* Question mark hovering near the tiger — gentle vertical bob. */
+  animation: questionFloat 2.4s ease-in-out infinite;
+}
+
+.tiger-accessory-spin {
+  /* Gear continuously rotating in place. */
+  animation: gearSpin 4s linear infinite;
+}
+
+/* ----------------------------------------------------------------
+   Tarot-card frame — ornate red/gold border with sawtooth bands.
+   Used as the outer container of each tiger panel.
+   ---------------------------------------------------------------- */
+
+.tigers-card-frame {
+  /* Dark crimson shrine interior. The frame border sits on top via
+     inset box-shadows so the dark surface touches all edges. */
+  background:
+    radial-gradient(
+      ellipse at 50% 0%,
+      rgba(255, 42, 138, 0.18),
+      transparent 60%
+    ),
+    radial-gradient(
+      ellipse at 50% 100%,
+      rgba(255, 42, 58, 0.2),
+      transparent 60%
+    ),
+    linear-gradient(180deg, #1a0510 0%, #08010a 100%);
+  /* Layered borders: gold pinstripe, dark gap, crimson neon frame. */
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 42, 58, 0.7),
+    inset 0 0 0 4px #c79a3a,
+    inset 0 0 0 5px #7a1a1a,
+    inset 0 0 0 9px #08010a,
+    inset 0 0 0 10px #ff2a3a;
+}
+
+/* Sawtooth band — sits inside the frame at top and bottom. */
+.tigers-sawtooth {
+  background-image:
+    linear-gradient(135deg, #ff2a3a 25%, transparent 25%),
+    linear-gradient(225deg, #ff2a3a 25%, transparent 25%);
+  background-size: 14px 14px;
+  background-position:
+    0 0,
+    0 0;
+  filter: drop-shadow(0 0 3px rgba(255, 42, 58, 0.5));
+}
+
+/* Outer neon halo — animated red/pink glow that lives OUTSIDE the
+   antique frame. Variable `--card-neon` sets the primary color. */
+.tigers-neon-halo {
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.6),
+    0 0 22px -4px var(--card-neon, rgba(239, 68, 68, 0.95)),
+    0 0 56px -6px var(--card-neon, rgba(236, 72, 153, 0.6));
+  animation: tigerGlow 2.4s ease-in-out infinite;
+}
+
+/* Dot grain — subtle neon speckle inside the dark shrine surface. */
+.tigers-parchment-grain {
+  background-image:
+    radial-gradient(rgba(255, 42, 138, 0.06) 1px, transparent 1px),
+    radial-gradient(rgba(0, 225, 255, 0.04) 1px, transparent 1px);
+  background-size:
+    14px 14px,
+    7px 7px;
+  background-position:
+    0 0,
+    3px 3px;
+}
+
+/* Idle glow pulse — varies box-shadow intensity. The shadow color is
+   provided per-tiger via a CSS variable on the element. */
+@keyframes tigerGlow {
+  0%,
+  100% {
+    box-shadow: 0 0 22px -10px var(--tiger-glow, rgba(255, 107, 0, 0.6));
+  }
+  50% {
+    box-shadow: 0 0 50px -8px var(--tiger-glow, rgba(255, 107, 0, 0.85));
+  }
+}
+
+/* Loading-intensified glow — faster, brighter. */
+@keyframes tigerGlowLoading {
+  0%,
+  100% {
+    box-shadow: 0 0 30px -8px var(--tiger-glow, rgba(255, 107, 0, 0.8));
+  }
+  50% {
+    box-shadow: 0 0 70px -4px var(--tiger-glow, rgba(255, 107, 0, 1));
+  }
+}
+
+/* Card flash — white overlay quickly fades. */
+@keyframes tigerCardFlash {
+  0% {
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.55;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Stamp slam — rotated, scale-overshoot then settle. The element
+   should also carry a static rotation; this keyframe layers scale only
+   so the rotation stays applied throughout. */
+@keyframes tigerStampSlam {
+  0% {
+    transform: scale(2.4) rotate(-8deg);
+    opacity: 0;
+  }
+  40% {
+    transform: scale(1.2) rotate(-8deg);
+    opacity: 1;
+  }
+  60% {
+    transform: scale(0.95) rotate(-8deg);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1) rotate(-8deg);
+    opacity: 1;
+  }
+}
+
+/* Fade-in from below — used on staggered reveal sections. */
+@keyframes tigerFadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Retro Tron-style grid floor — aggressive red. */
+.tigers-grid-floor {
+  background-image:
+    linear-gradient(to right, rgba(239, 68, 68, 0.22) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(239, 68, 68, 0.22) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    black 40%,
+    black 80%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    black 40%,
+    black 80%,
+    transparent 100%
+  );
+}
+
+/* Scanlines overlay — subtle, pointer-events none. */
+.tigers-scanlines {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.025) 0px,
+    rgba(255, 255, 255, 0.025) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+}
+
+/* Title chromatic glow used on the big "TIGERS" word — deeper red,
+   hot-pink chromatic offset on one side, scarlet glow halo. */
+.tigers-title-glow {
+  text-shadow:
+    0 0 0 #1a0408,
+    -3px 0 0 #ec4899,
+    3px 0 0 #ef4444,
+    0 0 30px rgba(220, 38, 38, 0.85),
+    0 0 60px rgba(236, 72, 153, 0.45);
 }

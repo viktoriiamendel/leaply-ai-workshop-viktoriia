@@ -8,11 +8,15 @@ const EnvSchema = z.object({
     .enum(["development", "test", "production"])
     .default("development"),
 
-  // Example public var (safe to expose to the browser):
-  // NEXT_PUBLIC_APP_URL: z.string().url(),
+  // Server-only secret — used by /api/critique to call Gemini.
+  // Never expose to the browser; never prefix with NEXT_PUBLIC_.
+  GEMINI_API_KEY: z.string().min(1, "GEMINI_API_KEY is required").optional(),
 
-  // Example server-only secret (never NEXT_PUBLIC_):
-  // OPENAI_API_KEY: z.string().min(1),
+  // Set to "1" in .env.local to bypass Gemini entirely and serve a
+  // saved real response from public/demo-critique.json. Used when the
+  // live key is rate-limited / revoked / unavailable — keeps the demo
+  // resilient. The fixture is real Gemini output captured earlier.
+  DEMO_MODE: z.string().optional(),
 })
 
 export const env = EnvSchema.parse(process.env)

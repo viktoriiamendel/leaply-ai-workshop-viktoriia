@@ -1,7 +1,8 @@
-import { Geist_Mono, Figtree } from "next/font/google"
+import { Bungee, Figtree, Geist_Mono, VT323 } from "next/font/google"
 
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
+import { Toaster } from "@/components/ui/sonner"
 import { cn } from "@/lib/utils"
 
 const figtree = Figtree({ subsets: ["latin"], variable: "--font-sans" })
@@ -9,6 +10,22 @@ const figtree = Figtree({ subsets: ["latin"], variable: "--font-sans" })
 const fontMono = Geist_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
+})
+
+// Retro display face for "TIGERS", tiger names, stamps. Bungee is a heavy
+// uppercase block font — pairs well with multi-layer text-shadow glows.
+const bungee = Bungee({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-display",
+})
+
+// Retro pixel-mono used for labels and taglines. VT323 is a classic
+// terminal/arcade face.
+const vt323 = VT323({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-retro-mono",
 })
 
 export default function RootLayout({
@@ -23,12 +40,17 @@ export default function RootLayout({
       className={cn(
         "antialiased",
         fontMono.variable,
-        "font-sans",
-        figtree.variable
+        figtree.variable,
+        bungee.variable,
+        vt323.variable,
+        "font-sans"
       )}
     >
       <body>
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          {children}
+          <Toaster position="top-center" />
+        </ThemeProvider>
       </body>
     </html>
   )
