@@ -210,8 +210,11 @@ export function ComplianceChat() {
               Editor
             </span>
           </h1>
+          <span className="animate-pulse text-sm" aria-hidden>
+            🚨
+          </span>
           <span className="ml-auto font-mono text-[10px] tracking-[0.2em] text-stone-600 uppercase">
-            FTC/FDA Wellness
+            👮 FTC/FDA Patrol
           </span>
         </div>
       </header>
@@ -329,7 +332,7 @@ function EmptyHero({ onTry }: { onTry: () => void }) {
         className="pointer-events-none absolute top-1/2 size-80 -translate-y-1/2 rounded-full bg-amber-500/10 blur-[100px]"
       />
       <p className="relative mb-4 font-mono text-[11px] tracking-[0.3em] text-amber-400/80 uppercase">
-        Leaply Compliance Desk
+        🚨 Leaply Compliance Desk 🚨
       </p>
       <h2 className="relative font-[family-name:var(--font-editorial)] text-4xl leading-[1.05] font-light text-stone-50 sm:text-5xl">
         Paste a creative.

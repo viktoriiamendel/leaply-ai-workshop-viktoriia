@@ -111,7 +111,8 @@ export function AnalyzingPanel({ step }: { step: number }) {
   return (
     <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
       <p className="mb-4 font-mono text-[11px] tracking-[0.2em] text-amber-400/90 uppercase">
-        Analyzing against the ruleset
+        <span className="animate-pulse">🚨</span> Compliance patrol — scanning
+        the ruleset
       </p>
       <ul className="space-y-2.5">
         {STEPS.map((label, i) => {

@@ -33,7 +33,7 @@ export function ComplianceResultView({
       {/* Assessment banner */}
       <div className="rounded-2xl border border-amber-400/20 bg-amber-400/[0.04] p-5 shadow-xl shadow-black/30">
         <p className="mb-2 font-mono text-[11px] tracking-[0.2em] text-amber-400/90 uppercase">
-          Assessment
+          👮 Officer&apos;s assessment
         </p>
         <p className="text-[15px] leading-relaxed text-stone-200">
           {result.assessment}
@@ -44,9 +44,14 @@ export function ComplianceResultView({
             label="changes"
             tone="text-stone-300"
           />
-          {high > 0 && <Stat n={high} label="high" tone="text-rose-300" />}
+          {high > 0 && <Stat n={high} label="🚨 high" tone="text-rose-300" />}
           {med > 0 && <Stat n={med} label="medium" tone="text-amber-300" />}
           {low > 0 && <Stat n={low} label="low" tone="text-sky-300" />}
+          {result.findings.length === 0 && (
+            <span className="rounded-full border border-emerald-400/30 bg-emerald-400/10 px-2.5 py-1 text-emerald-300">
+              🎉 All clear, officer
+            </span>
+          )}
         </div>
       </div>
 
