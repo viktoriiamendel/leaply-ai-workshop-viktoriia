@@ -14,7 +14,7 @@ import {
   ComplianceResultView,
   type Variant,
 } from "@/components/compliance/compliance-result"
-import { RulesChecklist } from "@/components/compliance/rules-checklist"
+import { Changelog } from "@/components/compliance/changelog"
 import { RefineChat } from "@/components/compliance/refine-chat"
 
 const STEPS = [
@@ -126,7 +126,7 @@ export function ComplianceEditor() {
               variant={variant}
               onVariant={setVariant}
             />
-            <RulesChecklist findings={result.findings} />
+            <Changelog original={checkedCreo} findings={result.findings} />
             <RefineChat
               key={checkedCreo + variant}
               creo={checkedCreo}
