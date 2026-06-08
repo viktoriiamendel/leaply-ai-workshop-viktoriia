@@ -2,7 +2,7 @@
 
 import { RiCheckLine } from "@remixicon/react"
 
-import { COMPLIANCE_RULES } from "@/lib/compliance-rules"
+import { COMPLIANCE_RULES } from "@/lib/skill/rulebook"
 import type { ComplianceFinding } from "@/lib/schemas/compliance"
 
 const SEV: Record<

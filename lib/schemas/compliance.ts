@@ -2,7 +2,7 @@ import { z } from "zod"
 
 // One issue the editor found, tied to a rule from COMPLIANCE_RULES.
 export const ComplianceFindingSchema = z.object({
-  ruleId: z.number().int(), // which rule (see lib/compliance-rules.ts)
+  ruleId: z.number().int(), // which rule (see lib/skill/rulebook.ts)
   severity: z.enum(["low", "medium", "high"]),
   issue: z.string(), // what's wrong, in plain English
   before: z.string(), // original snippet ("" if it's an addition)
