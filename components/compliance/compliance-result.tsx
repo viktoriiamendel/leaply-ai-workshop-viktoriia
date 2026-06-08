@@ -10,10 +10,23 @@ import {
 
 import type { ComplianceResult } from "@/lib/schemas/compliance"
 
-export function ComplianceResultView({ result }: { result: ComplianceResult }) {
+export type Variant = "minimal" | "polished"
+
+export function ComplianceResultView({
+  result,
+  variant,
+  onVariant,
+}: {
+  result: ComplianceResult
+  variant: Variant
+  onVariant: (v: Variant) => void
+}) {
   const high = result.findings.filter((f) => f.severity === "high").length
   const med = result.findings.filter((f) => f.severity === "medium").length
   const low = result.findings.filter((f) => f.severity === "low").length
+
+  const text =
+    variant === "minimal" ? result.compliantMinimal : result.compliantPolished
 
   return (
     <div className="space-y-5">
@@ -37,7 +50,43 @@ export function ComplianceResultView({ result }: { result: ComplianceResult }) {
         </div>
       </div>
 
-      <CompliantText text={result.compliantText} />
+      {/* Two compliant versions to choose from */}
+      <section className="rounded-2xl border border-emerald-400/20 bg-emerald-400/[0.03] p-5">
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+          <div className="flex items-center gap-1 rounded-full border border-white/10 bg-black/30 p-1">
+            <Tab
+              active={variant === "minimal"}
+              onClick={() => onVariant("minimal")}
+            >
+              Minimal
+            </Tab>
+            <Tab
+              active={variant === "polished"}
+              onClick={() => onVariant("polished")}
+            >
+              Polished
+            </Tab>
+          </div>
+          <CopyButton text={text} />
+        </div>
+
+        <p className="mb-3 text-xs text-stone-500">
+          {variant === "minimal"
+            ? "Close to your original — only the compliance fixes."
+            : "Bold, native, written by a pro copywriter — still fully compliant."}
+        </p>
+
+        <p className="font-[family-name:var(--font-editorial)] text-[17px] leading-relaxed whitespace-pre-wrap text-stone-100">
+          {text}
+        </p>
+
+        {variant === "polished" && result.polishNote && (
+          <p className="mt-4 border-t border-white/10 pt-3 text-sm text-emerald-200/80">
+            <span className="font-medium">Stronger here:</span>{" "}
+            {result.polishNote}
+          </p>
+        )}
+      </section>
 
       {result.disclaimers.length > 0 && (
         <Panel
@@ -70,6 +119,58 @@ export function ComplianceResultView({ result }: { result: ComplianceResult }) {
   )
 }
 
+function Tab({
+  active,
+  onClick,
+  children,
+}: {
+  active: boolean
+  onClick: () => void
+  children: React.ReactNode
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className={`rounded-full px-3.5 py-1.5 text-sm transition ${
+        active
+          ? "bg-amber-400 text-black"
+          : "text-stone-300 hover:text-stone-100"
+      }`}
+    >
+      {children}
+    </button>
+  )
+}
+
+function CopyButton({ text }: { text: string }) {
+  const [copied, setCopied] = useState(false)
+  async function copy() {
+    try {
+      await navigator.clipboard.writeText(text)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch {
+      // ignore
+    }
+  }
+  return (
+    <button
+      onClick={copy}
+      className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-xs text-stone-200 transition hover:bg-white/10"
+    >
+      {copied ? (
+        <>
+          <RiCheckLine className="size-3.5" /> Copied
+        </>
+      ) : (
+        <>
+          <RiFileCopyLine className="size-3.5" /> Copy
+        </>
+      )}
+    </button>
+  )
+}
+
 function Stat({ n, label, tone }: { n: number; label: string; tone: string }) {
   return (
     <span
@@ -98,50 +199,6 @@ function Panel({
         </h2>
       </div>
       {children}
-    </section>
-  )
-}
-
-function CompliantText({ text }: { text: string }) {
-  const [copied, setCopied] = useState(false)
-
-  async function copy() {
-    try {
-      await navigator.clipboard.writeText(text)
-      setCopied(true)
-      setTimeout(() => setCopied(false), 2000)
-    } catch {
-      // Clipboard can fail (permissions) — user can select manually.
-    }
-  }
-
-  return (
-    <section className="rounded-2xl border border-emerald-400/20 bg-emerald-400/[0.03] p-5">
-      <div className="mb-4 flex items-center justify-between gap-2">
-        <div className="flex items-center gap-2">
-          <RiCheckLine className="size-4 text-emerald-300" />
-          <h2 className="text-sm font-medium tracking-wide text-stone-100">
-            Compliant version
-          </h2>
-        </div>
-        <button
-          onClick={copy}
-          className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-xs text-stone-200 transition hover:bg-white/10"
-        >
-          {copied ? (
-            <>
-              <RiCheckLine className="size-3.5" /> Copied
-            </>
-          ) : (
-            <>
-              <RiFileCopyLine className="size-3.5" /> Copy
-            </>
-          )}
-        </button>
-      </div>
-      <p className="font-[family-name:var(--font-editorial)] text-[17px] leading-relaxed whitespace-pre-wrap text-stone-100">
-        {text}
-      </p>
     </section>
   )
 }

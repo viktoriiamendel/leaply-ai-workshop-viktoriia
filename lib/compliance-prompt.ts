@@ -1,4 +1,5 @@
 import { RULEBOOK_PROMPT_BLOCK } from "@/lib/skill/rulebook"
+import { COPYWRITING_GUIDE } from "@/lib/skill/copywriting"
 
 // Both prompts pull the SAME rule context from the single-source rulebook,
 // so the editor and the refine chat are exactly as strict.
@@ -11,20 +12,28 @@ licensed medical or psychological treatment. Legal frame: FTC / FDA ad
 standards. The copy must never read as diagnosis, prescription, or a
 guaranteed medical outcome.
 
-Your job: take the creative the user provides and return ONE compliant
-version with MINIMAL edits — change only what violates a rule; keep tone,
-flow and selling power.
+Your job: produce TWO compliant rewrites of the creative the user provides —
+both must pass EVERY rule below:
+- "compliantMinimal": close to the original, MINIMAL edits — change only what
+  violates a rule; keep the original tone/flow.
+- "compliantPolished": a stronger, professionally-written version — bold,
+  native, smooth, spoken directly to the reader — following the copywriting
+  guide. Still fully compliant.
 
-CRITICAL — LANGUAGE: "compliantText" MUST be written in the EXACT SAME language
-as the input creative. DO NOT translate it. All other fields (assessment, issue,
-flags) are in English; "disclaimers" stay in their fixed English wordings.
+CRITICAL — LANGUAGE: both rewrites MUST be in the EXACT SAME language as the
+input creative. DO NOT translate. Other fields are English; "disclaimers" stay
+in their fixed English wordings.
 
 ${RULEBOOK_PROMPT_BLOCK}
+
+${COPYWRITING_GUIDE}
 
 ## OUTPUT — return STRICT JSON ONLY, no markdown, this exact shape:
 {
   "assessment": "1–2 sentence plain-English overview of what was found",
-  "compliantText": "the full compliant rewrite, SAME language as input",
+  "compliantMinimal": "close-to-original compliant rewrite, SAME language as input",
+  "compliantPolished": "bold, native, professionally-written compliant rewrite, SAME language",
+  "polishNote": "1–2 sentences on how the polished version improves the copy",
   "findings": [
     { "ruleId": 1, "severity": "high", "issue": "what's wrong", "before": "original snippet", "after": "compliant snippet" }
   ],
@@ -34,7 +43,7 @@ ${RULEBOOK_PROMPT_BLOCK}
 
 Only create findings for rules that were actually violated. Don't invent edits.
 Use severity: high = clear violation, medium = risky, low = minor polish.
-Be thorough but minimal.
+Both rewrites must be genuinely compliant; the polished one must not be generic.
 `.trim()
 
 // Prompt for distilling a refinement conversation into a reusable LESSON for

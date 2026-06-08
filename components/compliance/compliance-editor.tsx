@@ -10,7 +10,10 @@ import {
 
 import { requestComplianceCheck } from "@/lib/compliance-client"
 import type { ComplianceResult } from "@/lib/schemas/compliance"
-import { ComplianceResultView } from "@/components/compliance/compliance-result"
+import {
+  ComplianceResultView,
+  type Variant,
+} from "@/components/compliance/compliance-result"
 import { RulesChecklist } from "@/components/compliance/rules-checklist"
 import { RefineChat } from "@/components/compliance/refine-chat"
 
@@ -32,6 +35,7 @@ export function ComplianceEditor() {
   const [error, setError] = useState<string | null>(null)
   const [result, setResult] = useState<ComplianceResult | null>(null)
   const [checkedCreo, setCheckedCreo] = useState("")
+  const [variant, setVariant] = useState<Variant>("polished")
   const [step, setStep] = useState(0)
 
   const canSubmit = creo.trim().length >= 10 && !loading
@@ -117,12 +121,20 @@ export function ComplianceEditor() {
           <AnalyzingPanel step={step} />
         ) : result ? (
           <div className="space-y-5">
-            <ComplianceResultView result={result} />
+            <ComplianceResultView
+              result={result}
+              variant={variant}
+              onVariant={setVariant}
+            />
             <RulesChecklist findings={result.findings} />
             <RefineChat
-              key={checkedCreo}
+              key={checkedCreo + variant}
               creo={checkedCreo}
-              initialCompliant={result.compliantText}
+              initialCompliant={
+                variant === "minimal"
+                  ? result.compliantMinimal
+                  : result.compliantPolished
+              }
             />
           </div>
         ) : (

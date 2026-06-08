@@ -12,7 +12,10 @@ export const ComplianceFindingSchema = z.object({
 // The full result returned by /api/compliance.
 export const ComplianceResultSchema = z.object({
   assessment: z.string(), // 1–2 sentence overview of what was found (English)
-  compliantText: z.string(), // rewrite, SAME language as the input creative
+  // Two compliant rewrites, both SAME language as the input creative:
+  compliantMinimal: z.string(), // close to the original + only compliance fixes
+  compliantPolished: z.string(), // pro-copywriter: bold, native, still compliant
+  polishNote: z.string(), // 1–2 sentences: how the polished version improves the copy
   findings: z.array(ComplianceFindingSchema),
   disclaimers: z.array(z.string()), // recommended disclaimer wordings (English)
   flags: z.array(z.string()), // editor/visual/substantiation notes (English)
