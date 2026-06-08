@@ -60,7 +60,7 @@ export function Changelog({
   const clean = COMPLIANCE_RULES.filter((r) => !flaggedIds.has(r.id))
 
   return (
-    <section className="rounded-2xl border border-white/10 bg-white/[0.03] p-5 backdrop-blur">
+    <section className="rounded-2xl border border-white/10 bg-white/[0.03] p-5 shadow-xl shadow-black/30 backdrop-blur">
       <div className="mb-4 flex items-baseline justify-between">
         <h2 className="font-[family-name:var(--font-editorial)] text-xl text-stone-100">
           Changelog

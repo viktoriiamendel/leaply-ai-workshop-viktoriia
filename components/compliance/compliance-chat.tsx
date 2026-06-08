@@ -158,20 +158,57 @@ export function ComplianceChat() {
   }
 
   return (
-    <div className="relative flex h-screen flex-col bg-[#0c0a09] text-stone-200">
+    <div className="relative flex h-screen flex-col overflow-hidden bg-[#0a0908] text-stone-200">
+      {/* Atmosphere: warm glow + cool counter-glow */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(60rem 40rem at 70% -10%, rgba(245,158,11,0.08), transparent 60%)",
+            "radial-gradient(70rem 45rem at 80% -15%, rgba(245,158,11,0.16), transparent 60%), radial-gradient(55rem 40rem at -12% 115%, rgba(244,114,98,0.09), transparent 55%)",
         }}
       />
-      <header className="relative z-10 border-b border-white/10 px-5 py-3">
-        <div className="mx-auto flex max-w-3xl items-center gap-2">
-          <RiShieldCheckLine className="size-4 text-amber-400" />
+      {/* Faint grid, masked toward the top */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 opacity-[0.05]"
+        style={{
+          backgroundImage:
+            "linear-gradient(to right,#fff 1px,transparent 1px),linear-gradient(to bottom,#fff 1px,transparent 1px)",
+          backgroundSize: "48px 48px",
+          maskImage:
+            "radial-gradient(circle at 50% 0%, #000 25%, transparent 70%)",
+        }}
+      />
+      {/* Film grain */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 opacity-[0.06] mix-blend-soft-light"
+        style={{
+          backgroundImage:
+            "url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22120%22 height=%22120%22%3E%3Cfilter id=%22n%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.85%22 numOctaves=%222%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23n)%22/%3E%3C/svg%3E')",
+        }}
+      />
+      {/* Vignette */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(120% 85% at 50% 45%, transparent 55%, rgba(0,0,0,0.55) 100%)",
+        }}
+      />
+
+      <header className="relative z-10 border-b border-white/[0.07] bg-white/[0.02] px-5 py-3 backdrop-blur-xl">
+        <div className="mx-auto flex max-w-3xl items-center gap-2.5">
+          <span className="flex size-7 items-center justify-center rounded-lg bg-gradient-to-br from-amber-300 to-amber-500 text-black shadow-lg shadow-amber-500/25">
+            <RiShieldCheckLine className="size-4" />
+          </span>
           <h1 className="font-[family-name:var(--font-editorial)] text-lg text-stone-50">
-            Compliance <span className="text-amber-400 italic">Editor</span>
+            Compliance{" "}
+            <span className="bg-gradient-to-r from-amber-200 to-amber-400 bg-clip-text text-transparent italic">
+              Editor
+            </span>
           </h1>
           <span className="ml-auto font-mono text-[10px] tracking-[0.2em] text-stone-600 uppercase">
             FTC/FDA Wellness
@@ -186,20 +223,31 @@ export function ComplianceChat() {
           )}
 
           {items.map((i) => {
-            if (i.t === "creo") return <CreoBubble key={i.id} text={i.text} />
-            if (i.t === "refine") return <UserBubble key={i.id} text={i.text} />
-            if (i.t === "version")
-              return <VersionCard key={i.id} reply={i.reply} text={i.text} />
-            if (i.t === "lesson")
-              return <LessonCard key={i.id} markdown={i.markdown} />
+            const node =
+              i.t === "creo" ? (
+                <CreoBubble text={i.text} />
+              ) : i.t === "refine" ? (
+                <UserBubble text={i.text} />
+              ) : i.t === "version" ? (
+                <VersionCard reply={i.reply} text={i.text} />
+              ) : i.t === "lesson" ? (
+                <LessonCard markdown={i.markdown} />
+              ) : (
+                <div className="space-y-5">
+                  <ComplianceResultView
+                    result={i.result}
+                    variant={variant}
+                    onVariant={onVariant}
+                  />
+                  <Changelog original={creo} findings={i.result.findings} />
+                </div>
+              )
             return (
-              <div key={i.id} className="space-y-5">
-                <ComplianceResultView
-                  result={i.result}
-                  variant={variant}
-                  onVariant={onVariant}
-                />
-                <Changelog original={creo} findings={i.result.findings} />
+              <div
+                key={i.id}
+                className="animate-in duration-500 fade-in slide-in-from-bottom-3"
+              >
+                {node}
               </div>
             )
           })}
@@ -220,8 +268,8 @@ export function ComplianceChat() {
         </div>
       </div>
 
-      <div className="relative z-10 border-t border-white/10 bg-[#0c0a09]/90 backdrop-blur">
-        <div className="mx-auto max-w-3xl px-4 py-3">
+      <div className="relative z-10 border-t border-white/[0.07] bg-[#0a0908]/80 backdrop-blur-xl">
+        <div className="mx-auto max-w-3xl px-4 pt-3 pb-4">
           {hasRefine && (
             <button
               onClick={saveLesson}
@@ -236,7 +284,7 @@ export function ComplianceChat() {
               Save as lesson
             </button>
           )}
-          <div className="flex items-end gap-2">
+          <div className="flex items-end gap-2 rounded-2xl border border-white/10 bg-black/40 p-1.5 shadow-2xl shadow-black/50 transition-colors focus-within:border-amber-400/40">
             <textarea
               value={draft}
               onChange={(e) => setDraft(e.target.value)}
@@ -252,12 +300,12 @@ export function ComplianceChat() {
                   ? "Ask for a change — “shorter”, “warmer”, “keep the word protocol”…"
                   : "Paste the creative here — storytell, script, or copy…"
               }
-              className="max-h-60 flex-1 resize-y rounded-xl border border-white/10 bg-black/30 p-3 text-sm leading-relaxed text-stone-100 outline-none placeholder:text-stone-600 focus:border-amber-400/40"
+              className="max-h-60 flex-1 resize-y bg-transparent px-2.5 py-2 text-sm leading-relaxed text-stone-100 outline-none placeholder:text-stone-600"
             />
             <button
               onClick={send}
               disabled={loading || draft.trim().length === 0}
-              className="inline-flex size-11 items-center justify-center rounded-xl bg-amber-400 text-black transition hover:bg-amber-300 disabled:cursor-not-allowed disabled:opacity-40"
+              className="inline-flex size-10 items-center justify-center rounded-xl bg-gradient-to-br from-amber-300 to-amber-500 text-black shadow-lg shadow-amber-500/30 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none"
               aria-label="Send"
             >
               {loading ? (
@@ -275,17 +323,28 @@ export function ComplianceChat() {
 
 function EmptyHero({ onTry }: { onTry: () => void }) {
   return (
-    <div className="flex min-h-[40vh] flex-col items-center justify-center text-center">
-      <h2 className="font-[family-name:var(--font-editorial)] text-3xl text-stone-100">
-        Paste a creative to check
+    <div className="relative flex min-h-[55vh] animate-in flex-col items-center justify-center px-4 text-center duration-700 fade-in slide-in-from-bottom-4">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute top-1/2 size-80 -translate-y-1/2 rounded-full bg-amber-500/10 blur-[100px]"
+      />
+      <p className="relative mb-4 font-mono text-[11px] tracking-[0.3em] text-amber-400/80 uppercase">
+        Leaply Compliance Desk
+      </p>
+      <h2 className="relative font-[family-name:var(--font-editorial)] text-4xl leading-[1.05] font-light text-stone-50 sm:text-5xl">
+        Paste a creative.
+        <br />
+        <span className="bg-gradient-to-r from-amber-200 via-amber-300 to-orange-400 bg-clip-text text-transparent italic">
+          We&apos;ll make it compliant.
+        </span>
       </h2>
-      <p className="mt-3 max-w-md text-sm text-stone-400">
-        Get a compliance check, a Minimal and a Polished compliant rewrite, the
-        in-context changelog — then refine it in chat.
+      <p className="relative mt-5 max-w-md text-sm text-stone-400">
+        A compliance check, a Minimal and a Polished rewrite, the in-context
+        changelog — then refine it in chat.
       </p>
       <button
         onClick={onTry}
-        className="mt-5 inline-flex items-center gap-1.5 rounded-full border border-amber-400/30 bg-amber-400/10 px-4 py-2 text-sm text-amber-200 transition hover:bg-amber-400/20"
+        className="relative mt-7 inline-flex items-center gap-1.5 rounded-full border border-amber-400/30 bg-amber-400/10 px-5 py-2.5 text-sm text-amber-100 shadow-lg shadow-amber-500/10 transition hover:bg-amber-400/20 hover:shadow-amber-500/20"
       >
         <RiSparklingLine className="size-4" /> Try an example
       </button>

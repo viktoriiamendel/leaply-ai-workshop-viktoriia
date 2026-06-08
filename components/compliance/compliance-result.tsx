@@ -31,7 +31,7 @@ export function ComplianceResultView({
   return (
     <div className="space-y-5">
       {/* Assessment banner */}
-      <div className="rounded-2xl border border-amber-400/20 bg-amber-400/[0.04] p-5">
+      <div className="rounded-2xl border border-amber-400/20 bg-amber-400/[0.04] p-5 shadow-xl shadow-black/30">
         <p className="mb-2 font-mono text-[11px] tracking-[0.2em] text-amber-400/90 uppercase">
           Assessment
         </p>
@@ -51,7 +51,7 @@ export function ComplianceResultView({
       </div>
 
       {/* Two compliant versions to choose from */}
-      <section className="rounded-2xl border border-emerald-400/20 bg-emerald-400/[0.03] p-5">
+      <section className="rounded-2xl border border-emerald-400/20 bg-emerald-400/[0.03] p-5 shadow-xl shadow-black/30">
         <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-1 rounded-full border border-white/10 bg-black/30 p-1">
             <Tab
