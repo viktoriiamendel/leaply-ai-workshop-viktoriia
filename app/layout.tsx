@@ -1,4 +1,4 @@
-import { Bungee, Figtree, Geist_Mono, VT323 } from "next/font/google"
+import { Bungee, Figtree, Fraunces, Geist_Mono, VT323 } from "next/font/google"
 
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
@@ -10,6 +10,12 @@ const figtree = Figtree({ subsets: ["latin"], variable: "--font-sans" })
 const fontMono = Geist_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
+})
+
+// Editorial display serif for the Compliance Editor headings.
+const fraunces = Fraunces({
+  subsets: ["latin"],
+  variable: "--font-editorial",
 })
 
 // Retro display face for "TIGERS", tiger names, stamps. Bungee is a heavy
@@ -41,6 +47,7 @@ export default function RootLayout({
         "antialiased",
         fontMono.variable,
         figtree.variable,
+        fraunces.variable,
         bungee.variable,
         vt323.variable,
         "font-sans"
