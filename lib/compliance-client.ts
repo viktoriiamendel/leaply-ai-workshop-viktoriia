@@ -1,8 +1,10 @@
 import {
   ComplianceResultSchema,
   ComplianceChatResponseSchema,
+  ComplianceLessonResponseSchema,
   type ComplianceResult,
   type ComplianceChatResponse,
+  type ComplianceLessonResponse,
   type ChatMessage,
 } from "@/lib/schemas/compliance"
 
@@ -89,6 +91,50 @@ export async function requestComplianceRefine(input: {
   const parsed = ComplianceChatResponseSchema.safeParse(json.result)
   if (!parsed.success) {
     throw new Error("The reply was malformed. Try again.")
+  }
+  return parsed.data
+}
+
+// Distils the refinement conversation into a reusable lesson (markdown) to
+// paste into the rulebook / skill. Throws Error(message) on failure.
+export async function requestComplianceLesson(input: {
+  creo: string
+  compliantText: string
+  messages: ChatMessage[]
+}): Promise<ComplianceLessonResponse> {
+  let response: Response
+  try {
+    response = await fetch("/api/compliance/lesson", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(input),
+    })
+  } catch {
+    throw new Error("Network error. Check your connection and try again.")
+  }
+
+  let json: unknown
+  try {
+    json = await response.json()
+  } catch {
+    throw new Error("The server returned an unreadable response.")
+  }
+
+  if (!response.ok) {
+    const message =
+      isObject(json) && typeof json.error === "string"
+        ? json.error
+        : `Request failed (${response.status}).`
+    throw new Error(message)
+  }
+
+  if (!isObject(json) || !("result" in json)) {
+    throw new Error("The server returned an unexpected response.")
+  }
+
+  const parsed = ComplianceLessonResponseSchema.safeParse(json.result)
+  if (!parsed.success) {
+    throw new Error("The lesson was malformed. Try again.")
   }
   return parsed.data
 }

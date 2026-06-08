@@ -37,3 +37,12 @@ export const ComplianceChatResponseSchema = z.object({
 export type ComplianceChatResponse = z.infer<
   typeof ComplianceChatResponseSchema
 >
+
+// ---- Lesson capture (teach the rulebook from a refinement chat) ----
+
+export const ComplianceLessonResponseSchema = z.object({
+  markdown: z.string(), // a ready-to-paste lesson in the learned-examples format
+})
+export type ComplianceLessonResponse = z.infer<
+  typeof ComplianceLessonResponseSchema
+>

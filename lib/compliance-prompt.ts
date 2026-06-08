@@ -37,6 +37,24 @@ Use severity: high = clear violation, medium = risky, low = minor polish.
 Be thorough but minimal.
 `.trim()
 
+// Prompt for distilling a refinement conversation into a reusable LESSON for
+// the rulebook (the B in the "teach the skill" loop). Output is ready-to-paste
+// markdown in the learned-examples format.
+export const COMPLIANCE_LESSON_PROMPT = `
+You turn a compliance refinement conversation into ONE reusable lesson for the
+Leaply compliance rulebook. Generalise — capture the underlying rule, not just
+this one edit. Tie it to a rule id when relevant.
+
+${RULEBOOK_PROMPT_BLOCK}
+
+OUTPUT — STRICT JSON ONLY, this exact shape:
+{
+  "markdown": "## Lesson — <short title>\\n**Rule:** <name + id if any>\\n**Pattern:** <when this comes up>\\n**Before → After:** <short example>\\n**Why:** <1–2 sentences>"
+}
+Keep it concise (a few lines). If the conversation taught nothing
+rule-worthy, say so in the markdown.
+`.trim()
+
 // System prompt for the refinement CHAT — same rule context as the editor.
 export const COMPLIANCE_CHAT_SYSTEM_PROMPT = `
 You are the Leaply compliance editor, now in a refinement chat. The user has an

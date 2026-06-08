@@ -7,9 +7,13 @@ import {
   RiLoader4Line,
   RiSendPlaneFill,
   RiChat3Line,
+  RiLightbulbFlashLine,
 } from "@remixicon/react"
 
-import { requestComplianceRefine } from "@/lib/compliance-client"
+import {
+  requestComplianceRefine,
+  requestComplianceLesson,
+} from "@/lib/compliance-client"
 import type { ChatMessage } from "@/lib/schemas/compliance"
 
 export function RefineChat({
@@ -25,6 +29,38 @@ export function RefineChat({
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [copied, setCopied] = useState(false)
+  const [lesson, setLesson] = useState<string | null>(null)
+  const [lessonLoading, setLessonLoading] = useState(false)
+  const [lessonCopied, setLessonCopied] = useState(false)
+
+  async function saveLesson() {
+    if (lessonLoading || messages.length === 0) return
+    setLessonLoading(true)
+    setError(null)
+    try {
+      const res = await requestComplianceLesson({
+        creo,
+        compliantText: current,
+        messages,
+      })
+      setLesson(res.markdown)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong.")
+    } finally {
+      setLessonLoading(false)
+    }
+  }
+
+  async function copyLesson() {
+    if (!lesson) return
+    try {
+      await navigator.clipboard.writeText(lesson)
+      setLessonCopied(true)
+      setTimeout(() => setLessonCopied(false), 2000)
+    } catch {
+      // ignore — user can select manually
+    }
+  }
 
   async function send() {
     const text = draft.trim()
@@ -63,12 +99,56 @@ export function RefineChat({
 
   return (
     <section className="rounded-2xl border border-white/10 bg-white/[0.03] p-5 backdrop-blur">
-      <div className="mb-4 flex items-center gap-2">
-        <RiChat3Line className="size-4 text-amber-300" />
-        <h2 className="font-[family-name:var(--font-editorial)] text-xl text-stone-100">
-          Refine with AI
-        </h2>
+      <div className="mb-4 flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2">
+          <RiChat3Line className="size-4 text-amber-300" />
+          <h2 className="font-[family-name:var(--font-editorial)] text-xl text-stone-100">
+            Refine with AI
+          </h2>
+        </div>
+        {messages.length > 0 && (
+          <button
+            onClick={saveLesson}
+            disabled={lessonLoading}
+            className="inline-flex items-center gap-1.5 rounded-full border border-amber-400/30 bg-amber-400/10 px-3 py-1.5 text-xs text-amber-200 transition hover:bg-amber-400/20 disabled:opacity-40"
+          >
+            {lessonLoading ? (
+              <RiLoader4Line className="size-3.5 animate-spin" />
+            ) : (
+              <RiLightbulbFlashLine className="size-3.5" />
+            )}
+            Save as lesson
+          </button>
+        )}
       </div>
+
+      {/* Distilled lesson to teach the rulebook */}
+      {lesson && (
+        <div className="mb-4 rounded-xl border border-amber-400/25 bg-amber-400/[0.05] p-4">
+          <div className="mb-2 flex items-center justify-between">
+            <span className="font-mono text-[11px] tracking-wider text-amber-300/90 uppercase">
+              Lesson — paste to your skill maintainer
+            </span>
+            <button
+              onClick={copyLesson}
+              className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-2.5 py-1 text-xs text-stone-200 transition hover:bg-white/10"
+            >
+              {lessonCopied ? (
+                <>
+                  <RiCheckLine className="size-3.5" /> Copied
+                </>
+              ) : (
+                <>
+                  <RiFileCopyLine className="size-3.5" /> Copy
+                </>
+              )}
+            </button>
+          </div>
+          <pre className="font-mono text-xs leading-relaxed whitespace-pre-wrap text-stone-200">
+            {lesson}
+          </pre>
+        </div>
+      )}
 
       {/* Always-current version */}
       <div className="mb-4 rounded-xl border border-emerald-400/20 bg-emerald-400/[0.03] p-4">
