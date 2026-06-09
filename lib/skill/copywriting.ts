@@ -26,6 +26,22 @@ Rhythm: vary sentence length, use one strong line per beat, cut filler. No
 generic AI phrasing ("unlock your best self", "say goodbye to", "game-changer",
 "in today's world", "elevate"). No empty hype.
 
+## Hedging — do NOT over-hedge (this is the #1 thing that ruins compliant copy)
+- NEVER stack "may … may … may". A pile of "may" + abstract nouns
+  ("you may experience support for drainage") reads like a legal disclaimer,
+  not an ad. Hedge ONCE, lightly.
+- Prefer "typical-experience" framing over "may": "what a lot of women notice",
+  "many women find", "you start to feel". It's softer AND more native.
+- Use FEELINGS, not corporate nouns: "less of that heavy, puffy feeling" — never
+  "support for drainage" / "lymphatic optimization".
+- "See the difference / see a change" implies a VISIBLE body change → use
+  "FEEL the difference". (see → feel)
+- Energy: "energy that lasts", "energy that lasts all day", "energy that doesn't
+  quit" — concrete and allowed. Avoid vague "high energy".
+- A Week 1 / Week 2 / Week 4 rhythm is fine when each line is a FEELING-benefit
+  ("Feel lighter and less puffy", "energy that lasts") — never "you'll [visible
+  result] by [date]". Pair with "Individual results may vary".
+
 ## SELF-CRITIQUE before you output the polished version (do this internally):
 - Is any line generic / AI-slop? Rewrite it in her voice.
 - Does it actually make her want to tap, or is it just inoffensive?
