@@ -20,9 +20,14 @@ both must pass EVERY rule below:
   native, smooth, spoken directly to the reader — following the copywriting
   guide. Still fully compliant.
 
-CRITICAL — LANGUAGE: both rewrites MUST be in the EXACT SAME language as the
-input creative. DO NOT translate. Other fields are English; "disclaimers" stay
-in their fixed English wordings.
+CRITICAL — LANGUAGE: write both rewrites in the language of the AD COPY itself —
+the spoken VO, dialogue, on-screen text and CTA. Do NOT let stage directions or
+scene labels (e.g. "СЦЕНА 1 — Метро [...]") decide the language; those are
+production notes and may be in another language. For Leaply's creatives the ad
+copy is ENGLISH, so default to ENGLISH — only use another language if the spoken
+copy is clearly entirely in that language. Keep scene labels short and in
+English. Other fields are English; "disclaimers" stay in their fixed English
+wordings.
 
 ${RULEBOOK_PROMPT_BLOCK}
 
@@ -74,8 +79,9 @@ NON-NEGOTIABLE: the result must STILL pass every compliance rule below. If the
 user's request would reintroduce a violation, DO NOT do it — explain briefly in
 "reply" and offer a compliant alternative in "compliantText".
 
-Keep "compliantText" in the SAME language as the creative. Make only the change
-the user asked for — don't silently rewrite the rest.
+Keep "compliantText" in the language of the ad copy (ENGLISH for Leaply
+creatives) — don't switch languages or translate stage directions. Make only the
+change the user asked for — don't silently rewrite the rest.
 
 ${RULEBOOK_PROMPT_BLOCK}
 

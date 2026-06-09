@@ -58,10 +58,12 @@ export async function POST(req: Request) {
         systemInstruction: COMPLIANCE_SYSTEM_PROMPT,
         responseMimeType: "application/json",
         temperature: 0.4,
-        // Two full rewrites + findings for a long script can be large, and
-        // gemini-2.5-flash also spends part of this budget on "thinking" —
-        // keep it high so the JSON never gets truncated mid-output.
+        // High cap so the two-variant JSON for long scripts never truncates.
         maxOutputTokens: 32768,
+        // Bound "thinking": dynamic thinking ballooned long scripts to ~75s
+        // (Vercel timeout), but turning it off entirely made the model miss
+        // rules. A fixed small budget keeps it thorough AND fast (~30-40s).
+        thinkingConfig: { thinkingBudget: 2048 },
       },
     })
     rawText = response.text ?? ""
