@@ -13,6 +13,7 @@ import { COMPLIANCE_CHAT_SYSTEM_PROMPT } from "@/lib/compliance-prompt"
 
 export const runtime = "nodejs"
 export const dynamic = "force-dynamic"
+export const maxDuration = 60
 
 const MODEL = "gemini-2.5-flash"
 
@@ -78,7 +79,7 @@ export async function POST(req: Request) {
         systemInstruction: COMPLIANCE_CHAT_SYSTEM_PROMPT,
         responseMimeType: "application/json",
         temperature: 0.4,
-        maxOutputTokens: 8192,
+        maxOutputTokens: 16384,
       },
     })
     rawText = response.text ?? ""

@@ -11,6 +11,8 @@ import { COMPLIANCE_SYSTEM_PROMPT } from "@/lib/compliance-prompt"
 // Gemini SDK needs Node APIs; every creative is unique so don't cache.
 export const runtime = "nodejs"
 export const dynamic = "force-dynamic"
+// Two full rewrites of a long script can take ~30s — allow up to 60s on Vercel.
+export const maxDuration = 60
 
 const MODEL = "gemini-2.5-flash"
 
@@ -56,7 +58,10 @@ export async function POST(req: Request) {
         systemInstruction: COMPLIANCE_SYSTEM_PROMPT,
         responseMimeType: "application/json",
         temperature: 0.4,
-        maxOutputTokens: 8192,
+        // Two full rewrites + findings for a long script can be large, and
+        // gemini-2.5-flash also spends part of this budget on "thinking" —
+        // keep it high so the JSON never gets truncated mid-output.
+        maxOutputTokens: 32768,
       },
     })
     rawText = response.text ?? ""

@@ -13,6 +13,7 @@ import { COMPLIANCE_LESSON_PROMPT } from "@/lib/compliance-prompt"
 
 export const runtime = "nodejs"
 export const dynamic = "force-dynamic"
+export const maxDuration = 60
 
 const MODEL = "gemini-2.5-flash"
 
@@ -66,7 +67,7 @@ export async function POST(req: Request) {
         systemInstruction: COMPLIANCE_LESSON_PROMPT,
         responseMimeType: "application/json",
         temperature: 0.3,
-        maxOutputTokens: 2048,
+        maxOutputTokens: 8192,
       },
     })
     rawText = response.text ?? ""
